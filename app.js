@@ -36,12 +36,21 @@ app.get("/",function(req,res){
   });
 });
 
+app.post("/search",function(req,res){
+  Data.find({color:req.body.find.search.toLowerCase()},function(err,data){
+     if(err){
+         console.log(err);
+     }else{
+       res.render("home",{data:data});
+     }
+  });
+});
 app.get("/newblock",function(req,res){
    res.render("create");
 });
 
 app.post("/",function(req,res){
-  req.body.entry.color=req.sanitize(req.body.entry.color);
+  req.body.entry.color=req.sanitize(req.body.entry.color.toLowerCase());
   Data.create(req.body.entry,function(err,data){
      if(err){
          res.render("create");
@@ -62,7 +71,7 @@ app.get("/:id/edit",function(req,res){
 });
 
 app.put("/:id",function(req,res){
-    req.body.entry.color=req.sanitize(req.body.entry.color);
+    req.body.entry.color=req.sanitize(req.body.entry.color.toLowerCase());
     Data.findByIdAndUpdate(req.params.id,req.body.entry,function(err,founddata){
         if(err){
             res.redirect("/");
