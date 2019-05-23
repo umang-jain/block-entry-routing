@@ -45,8 +45,14 @@
             <th scope="row"><%=  x.blockid %></th>
             <td><%=  x.color %></td>
             <td><%=  x.quantity %></td>
-            <td style="width:200px;"><button class="btn btn-success">Edit</button>
-            <button class="btn btn-danger" style="float:right;">Delete</button></td>
+            <td style="width:200px;">
+              <form action="/<%=x._id%>/edit" method="get" style="display:inline;">
+                  <Button class="btn btn-outline-success">Edit</Button>
+              </form>
+              <form action="/<%= x._id %>?_method=DELETE" method="post" style="display:inline;">
+                  <Button class="btn btn-outline-danger">Delete</Button>
+              </form>
+            </td>
           </tr>
         <% }) %>
         </tbody>

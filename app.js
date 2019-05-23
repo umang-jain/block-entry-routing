@@ -2,6 +2,7 @@ var express = require("express"),
     app=express(),
     mongoose=require("mongoose"),
     bodyparser=require("body-parser"),
+    methodoverride=require("method-override"),
     expresssanitizer= require("express-sanitizer");
 
 var PORT = process.env.PORT || 3000;
@@ -10,6 +11,7 @@ app.use(expresssanitizer());
 app.set("view engine","ejs");
 app.use(express.static("public"));
 app.use(bodyparser.urlencoded({extended:true}));
+app.use(methodoverride("_method"));
 
 // Database
 
@@ -49,6 +51,36 @@ app.post("/",function(req,res){
   });
 });
 
+app.get("/:id/edit",function(req,res){
+    Data.findById(req.params.id,function(err,founddata){
+        if(err){
+            console.log(err);
+        } else{
+            res.render("edit",{data:founddata});
+        }
+    });
+});
+
+app.put("/:id",function(req,res){
+    req.body.entry.color=req.sanitize(req.body.entry.color);
+    Data.findByIdAndUpdate(req.params.id,req.body.entry,function(err,founddata){
+        if(err){
+            res.redirect("/");
+        } else{
+            res.redirect("/")
+        }
+    });
+});
+
+app.delete("/:id",function(req,res){
+    Data.findByIdAndRemove(req.params.id,function(err){
+        if(err){
+            res.redirect("/");
+        } else{
+            res.redirect("/");
+        }
+    });
+});
 // Port
 
 app.listen(PORT,function(req,res){
